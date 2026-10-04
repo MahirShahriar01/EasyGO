@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main, "claude/**"]
+    paths: ["EasyGo.com/**", ".github/workflows/ci.yml"]
+  pull_request:
+    paths: ["EasyGo.com/**", ".github/workflows/ci.yml"]
+
+defaults:
+  run:
+    working-directory: EasyGo.com
+
+jobs:
+  backend:
+    name: PHP tests & code style
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, intl, pdo_sqlite, sqlite3, zip, bcmath
+          coverage: none
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: EasyGo.com/vendor
+          key: composer-${{ hashFiles('EasyGo.com/composer.lock') }}
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: cp .env.example .env && php artisan key:generate
+      - name: Code style (Laravel Pint)
+        run: vendor/bin/pint --test
+      - name: Feature & unit tests
+        run: php artisan test
+      - name: Migrations + demo seed smoke test
+        run: touch database/database.sqlite && php artisan migrate:fresh --seed --force
+
+  frontend:
+    name: Frontend build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: EasyGo.com/package-lock.json
+      - run: npm ci
+      - run: npm run build

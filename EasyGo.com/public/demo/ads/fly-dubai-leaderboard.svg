@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="250" viewBox="0 0 1200 250">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f2027"/><stop offset="1" stop-color="#2c5364"/></linearGradient></defs>
+<rect width="1200" height="250" fill="url(#g)"/>
+<circle cx="1080.0" cy="25.0" r="237.5" fill="#fff" opacity=".09"/><circle cx="864.0" cy="287.5" r="137.5" fill="#fff" opacity=".07"/>
+<g transform="translate(962.5,47.5) scale(6.458333333333333)" fill="#fff" opacity=".95"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></g>
+<text x="40" y="67.5" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18.8" font-weight="700" letter-spacing="3" fill="#fff" opacity=".85">FLASH FARE</text>
+<text x="40" y="130.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="50.0" font-weight="800" fill="#fff">Fly Dhaka → Dubai from ৳38,999</text>
+<text x="40" y="175.0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="21.2" fill="#fff" opacity=".92">Return trips with 30 kg baggage included</text>
+<rect x="40" y="195.0" width="239" height="37.5" rx="18.8" fill="#fff"/>
+<text x="159.4" y="220.8" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="17.0" font-weight="700" text-anchor="middle" fill="#0f2027">Grab the deal →</text>
+</svg>
