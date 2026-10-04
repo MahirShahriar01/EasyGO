@@ -10,6 +10,8 @@ import { clickHref, fetchZone, track } from './adApi';
  *  - auto_close_seconds  → progress bar + automatic dismissal
  *  - video creatives autoplay muted with an unmute toggle; "complete" is tracked on end
  *
+ * A creative that fails to load is dismissed silently (never traps the viewer).
+ *
  * Shown at most once per browser session per zone (sessionStorage), on top of the
  * server-side per-viewer daily frequency cap.
  */
@@ -20,6 +22,11 @@ export default function InterstitialAd({ zone, delay = 1200, oncePerSession = tr
     const [muted, setMuted] = useState(true);
     const videoRef = useRef(null);
     const finished = useRef(false);
+    const counted = useRef(false);
+    // An impression is counted only once the creative has actually loaded.
+    const onLoaded = () => {
+        if (ad && !counted.current) { counted.current = true; track(ad.id, 'impression', zone); }
+    };
     const sessionKey = `easygo.interstitial.${zone}`;
 
     useEffect(() => {
@@ -31,7 +38,6 @@ export default function InterstitialAd({ zone, delay = 1200, oncePerSession = tr
                 if (!alive || !first) return;
                 setAd(first);
                 setRemaining(first.closable ? first.skip_after_seconds : 0);
-                track(first.id, 'impression', zone);
                 try { sessionStorage.setItem(sessionKey, '1'); } catch { /* ignore */ }
             });
         }, delay);
@@ -107,9 +113,11 @@ export default function InterstitialAd({ zone, delay = 1200, oncePerSession = tr
                         muted
                         playsInline
                         onEnded={() => { finished.current = true; track(ad.id, 'complete', zone); setRemaining(0); }}
+                        onError={() => setAd(null)}
+                        onLoadedData={onLoaded}
                     />
                 ) : (
-                    <img className="ad-media" src={ad.media_src} alt={ad.headline || ad.title} />
+                    <img className="ad-media" src={ad.media_src} alt={ad.headline || ad.title} onError={() => setAd(null)} onLoad={onLoaded} />
                 )}
 
                 {(ad.headline || href) && (

@@ -246,11 +246,12 @@ a { transition: color .15s ease; }
     position: fixed; inset: 0; z-index: 3000; background: rgba(2, 6, 23, .82); backdrop-filter: blur(4px);
     display: flex; align-items: center; justify-content: center; padding: 1rem; animation: adFade .3s ease;
     .ad-box { position: relative; max-width: min(520px, 94vw); width: 100%; border-radius: 1.25rem; overflow: hidden; background: #000; box-shadow: var(--eg-shadow-lg); }
-    .ad-media { max-height: 78vh; width: 100%; object-fit: contain; display: block; background: #000; }
+    .ad-media { max-height: 70vh; width: 100%; object-fit: contain; display: block; background: #000; }
     .ad-topbar { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: .6rem; z-index: 3; background: linear-gradient(180deg, rgba(0, 0, 0, .6), transparent); }
     .ad-skip { background: rgba(0, 0, 0, .65); color: #fff; border: 1px solid rgba(255, 255, 255, .35); border-radius: 2rem; padding: .35rem .9rem; font-size: .85rem; font-weight: 600;
         &:disabled { opacity: .85; cursor: default; } }
-    .ad-cta { position: absolute; left: 0; right: 0; bottom: 0; padding: 1rem; background: linear-gradient(0deg, rgba(0, 0, 0, .8), transparent); z-index: 3; }
+    // CTA sits below the creative so it never covers the advertiser's own artwork.
+    .ad-cta { position: relative; padding: .85rem 1rem; background: #0b1220; z-index: 3; }
     .ad-progress { position: absolute; left: 0; bottom: 0; height: 3px; background: #20c997; z-index: 4; transition: width .25s linear; }
 }
 

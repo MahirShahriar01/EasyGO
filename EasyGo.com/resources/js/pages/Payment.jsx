@@ -18,13 +18,14 @@ const METHODS = [
 ];
 
 /** Live countdown of the inventory hold; unpaid bookings expire afterwards. */
-function HoldTimer({ createdAt, minutes }) {
+function HoldTimer({ createdAt, minutes, onExpire }) {
     const deadline = new Date(createdAt).getTime() + minutes * 60000;
     const [left, setLeft] = useState(deadline - Date.now());
     useEffect(() => {
         const t = setInterval(() => setLeft(deadline - Date.now()), 1000);
         return () => clearInterval(t);
     }, [deadline]);
+    useEffect(() => { if (left <= 0) onExpire?.(); }, [left <= 0]); // eslint-disable-line react-hooks/exhaustive-deps
     if (left <= 0) return <div className="alert alert-danger">Your reservation hold has expired. Please start a new booking.</div>;
     const m = Math.floor(left / 60000);
     const s = Math.floor((left % 60000) / 1000);
@@ -46,6 +47,7 @@ export default function Payment() {
     const [form, setForm] = useState({ card_number: '', card_name: '', card_expiry: '', card_cvc: '', wallet_number: '', otp: '' });
     const [busy, setBusy] = useState(false);
     const [otpSent, setOtpSent] = useState(false);
+    const [expired, setExpired] = useState(false);
 
     if (loading) return <Spinner className="py-5 min-vh-50" />;
     if (error) return <div className="container py-5"><ErrorState message={error} /></div>;
@@ -86,7 +88,7 @@ export default function Payment() {
             <Stepper step={1} />
             <div className="row g-4">
                 <div className="col-lg-8">
-                    <HoldTimer createdAt={b.created_at} minutes={Number(settings.booking_hold_minutes || 30)} />
+                    <HoldTimer createdAt={b.created_at} minutes={Number(settings.booking_hold_minutes || 30)} onExpire={() => setExpired(true)} />
                     <form className="card border-0 p-4" onSubmit={pay}>
                         <h5 className="fw-bold mb-3">Choose a payment method</h5>
                         <div className="row g-2 mb-4">
@@ -138,7 +140,7 @@ export default function Payment() {
                             <div className="alert alert-success mb-0"><i className="mdi mdi-check-circle" /> Your room will be confirmed now. Pay <strong>{money(b.total)}</strong> at check-in. Free cancellation rules still apply.</div>
                         )}
 
-                        <button className="btn btn-gradient btn-lg mt-4" disabled={busy || (wallet && !otpSent)}>
+                        <button className="btn btn-gradient btn-lg mt-4" disabled={busy || expired || (wallet && !otpSent)}>
                             {busy ? <><span className="spinner-border spinner-border-sm me-2" />Processing…</> : method === 'pay_at_property' ? 'Confirm reservation' : <><i className="mdi mdi-lock" /> Pay {money(b.total)}</>}
                         </button>
                     </form>

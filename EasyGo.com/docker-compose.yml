@@ -1,0 +1,73 @@
+# EasyGo — local / single-server stack
+#   docker compose up -d --build        then open http://localhost:8080
+# See docs/DEPLOYMENT.md for details.
+x-app-env: &app-env
+  APP_NAME: EasyGo
+  APP_ENV: ${APP_ENV:-production}
+  APP_KEY: ${APP_KEY:?Set APP_KEY in .env (php artisan key:generate --show)}
+  APP_DEBUG: ${APP_DEBUG:-false}
+  APP_URL: ${APP_URL:-http://localhost:8080}
+  APP_TIMEZONE: ${APP_TIMEZONE:-Asia/Dhaka}
+  DB_CONNECTION: mysql
+  DB_HOST: db
+  DB_PORT: 3306
+  DB_DATABASE: easygo
+  DB_USERNAME: easygo
+  DB_PASSWORD: ${DB_PASSWORD:-easygo-secret}
+  CACHE_STORE: database
+  SESSION_DRIVER: database
+  QUEUE_CONNECTION: database
+  MAIL_MAILER: ${MAIL_MAILER:-log}
+  LOG_CHANNEL: stderr
+
+services:
+  app:
+    build: { context: ., target: app }
+    image: easygo-app
+    environment:
+      <<: *app-env
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+    volumes:
+      - uploads:/var/www/html/storage/app/public
+    depends_on: [db]
+    restart: unless-stopped
+
+  web:
+    build: { context: ., target: web }
+    image: easygo-web
+    ports: ["${APP_PORT:-8080}:80"]
+    volumes:
+      - uploads:/var/www/html/storage/app/public:ro
+    depends_on: [app]
+    restart: unless-stopped
+
+  scheduler:
+    build: { context: ., target: app }
+    image: easygo-app
+    command: ["php", "artisan", "schedule:work"]
+    environment: { <<: *app-env, RUN_MIGRATIONS: "false" }
+    depends_on: [app]
+    restart: unless-stopped
+
+  queue:
+    build: { context: ., target: app }
+    image: easygo-app
+    command: ["php", "artisan", "queue:work", "--tries=3", "--sleep=3"]
+    environment: { <<: *app-env, RUN_MIGRATIONS: "false" }
+    depends_on: [app]
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: easygo
+      MYSQL_USER: easygo
+      MYSQL_PASSWORD: ${DB_PASSWORD:-easygo-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root-secret}
+    volumes:
+      - mysql:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  uploads:
+  mysql:

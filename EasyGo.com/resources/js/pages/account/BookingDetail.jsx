@@ -111,8 +111,8 @@ export default function BookingDetail() {
                                 <div className="small mt-3">
                                     <div className="fw-bold mb-1">Payments</div>
                                     {b.payments.map((p) => (
-                                        <div key={p.id} className="d-flex justify-content-between border-bottom py-1">
-                                            <span>{titleCase(p.method)} <span className={`badge text-bg-${p.status === 'succeeded' ? 'success' : p.status === 'failed' ? 'danger' : 'info'}`}>{p.status}</span></span>
+                                        <div key={p.id} className="d-flex flex-wrap justify-content-between gap-2 border-bottom py-1">
+                                            <span>{titleCase(p.method)} <span className={`ms-1 badge text-bg-${p.status === 'succeeded' ? 'success' : p.status === 'failed' ? 'danger' : 'info'}`}>{p.status}</span></span>
                                             <span className="text-soft">{p.transaction_id || '—'}</span>
                                         </div>
                                     ))}

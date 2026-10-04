@@ -136,6 +136,17 @@ class BookingFlowTest extends TestCase
         $this->assertSame(1, $room->availableRooms(now()->addDays(10)->toDateString(), now()->addDays(13)->toDateString()));
     }
 
+    public function test_payment_is_rejected_after_hold_expires(): void
+    {
+        $room = $this->hotelWithRoom();
+        $this->actingAs($this->customer(), 'sanctum');
+        $ref = $this->postJson('/api/bookings', $this->hotelPayload($room->id))->json('booking.reference');
+        Booking::where('reference', $ref)->update(['created_at' => now()->subMinutes(31)]);
+
+        $this->postJson("/api/bookings/{$ref}/pay", ['method' => 'pay_at_property'])
+            ->assertUnprocessable()->assertJsonValidationErrors('booking');
+    }
+
     public function test_refund_policy_per_service(): void
     {
         $service = app(BookingService::class);

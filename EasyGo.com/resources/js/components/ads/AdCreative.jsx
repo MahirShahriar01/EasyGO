@@ -1,7 +1,7 @@
 import { clickHref } from './adApi';
 
 /** Renders one creative (image or video), wrapped in the tracking link when the ad has a target URL. */
-export default function AdCreative({ ad, video = {}, className = '', style }) {
+export default function AdCreative({ ad, video = {}, className = '', style, onError }) {
     const media = ad.media_type === 'video' ? (
         <video
             src={ad.media_src}
@@ -15,9 +15,10 @@ export default function AdCreative({ ad, video = {}, className = '', style }) {
             onEnded={video.onEnded}
             onTimeUpdate={video.onTimeUpdate}
             ref={video.ref}
+            onError={onError}
         />
     ) : (
-        <img src={ad.media_src} alt={ad.headline || ad.title} className={className} style={style} loading="lazy" />
+        <img src={ad.media_src} alt={ad.headline || ad.title} className={className} style={style} loading="lazy" onError={onError} />
     );
 
     const href = clickHref(ad);

@@ -167,6 +167,11 @@ class BookingService
             throw ValidationException::withMessages(['booking' => 'This booking cannot be paid.']);
         }
 
+        // The hold window is enforced here too, not only by the scheduler.
+        if ($booking->created_at->lt(now()->subMinutes((int) Setting::get('booking_hold_minutes', 30)))) {
+            throw ValidationException::withMessages(['booking' => 'Your reservation hold has expired. Please book again.']);
+        }
+
         // Hotels may be reserved now and paid at the property.
         if ($method === 'pay_at_property') {
             if ($booking->service_type !== 'hotel' || Setting::get('pay_at_property_enabled') !== '1') {

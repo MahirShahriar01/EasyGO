@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../../api/client';
+import Img from '../../components/common/Img';
 
 /** Resolve a stored path to a previewable URL (mirrors the backend ResolvesMedia trait). */
 export const previewUrl = (path) => (!path ? null : /^(https?:)?\/\//.test(path) || path.startsWith('/') ? path : `/storage/${path}`);
@@ -32,7 +33,7 @@ export function ImageInput({ value, onChange, folder = 'misc' }) {
     return (
         <div className="d-flex gap-3 align-items-start">
             <div className="border rounded-3 overflow-hidden bg-body-tertiary flex-shrink-0 d-flex align-items-center justify-content-center" style={{ width: 96, height: 72 }}>
-                {value ? <img src={previewUrl(value)} alt="" className="w-100 h-100 object-cover" /> : <i className="mdi mdi-image-outline fs-3 text-soft" />}
+                {value ? <Img src={previewUrl(value)} alt="" className="w-100 h-100 object-cover" /> : <i className="mdi mdi-image-outline fs-3 text-soft" />}
             </div>
             <div className="flex-grow-1">
                 <div className="input-group input-group-sm mb-1">
@@ -78,7 +79,7 @@ export function GalleryInput({ value = [], onChange, folder = 'misc' }) {
             <div className="d-flex flex-wrap gap-2 mb-2">
                 {list.map((p, i) => (
                     <div key={`${p}${i}`} className="position-relative">
-                        <img src={previewUrl(p)} alt="" className="rounded-3 object-cover border" style={{ width: 96, height: 72 }} />
+                        <Img src={previewUrl(p)} alt="" className="rounded-3 object-cover border" style={{ width: 96, height: 72 }} />
                         <button type="button" className="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0 p-0" style={{ width: 22, height: 22, transform: 'translate(30%,-30%)' }} onClick={() => onChange(list.filter((_, j) => j !== i))} aria-label="Remove image">
                             <i className="mdi mdi-close small" />
                         </button>

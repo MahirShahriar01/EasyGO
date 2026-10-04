@@ -100,7 +100,11 @@ export default function AdSlot({ zone, className = '', label = 'Sponsored' }) {
                 </button>
             )}
             <div className="ad-slide" key={ad.id}>
-                <AdCreative ad={ad} />
+                {/* Broken media: drop this creative from the rotation instead of showing an empty box. */}
+                <AdCreative ad={ad} onError={() => {
+                    const rest = ads.filter((a) => a.id !== ad.id);
+                    if (rest.length) { setPayload({ ...payload, ads: rest }); setIndex(0); } else setHidden(true);
+                }} />
             </div>
             {ads.length > 1 && (
                 <div className="ad-dots">
