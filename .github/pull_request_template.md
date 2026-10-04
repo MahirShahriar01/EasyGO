@@ -8,4 +8,4 @@
 - [ ] Manually checked in the browser (screenshots below for UI changes)
 
 ## Docs
-- [ ] Updated `EasyGo.com/docs/` where behaviour or API changed
+- [ ] Updated `docs/` where behaviour or API changed

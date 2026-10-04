@@ -13,6 +13,6 @@ with a description, reproduction steps and impact. You will receive an acknowled
 * No raw card data stored; ad tracking stores salted IP hashes only.
 
 ## Deployment hardening
-See the production checklist in [EasyGo.com/docs/DEPLOYMENT.md](EasyGo.com/docs/DEPLOYMENT.md#4-production-checklist):
+See the production checklist in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#4-production-checklist):
 disable debug, enforce HTTPS, remove demo accounts, configure a real payment gateway and keep dependencies updated
 (`composer audit`, `npm audit`).

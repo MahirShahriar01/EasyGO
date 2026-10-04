@@ -3,13 +3,9 @@ name: CI
 on:
   push:
     branches: [master, main, "claude/**"]
-    paths: ["EasyGo.com/**", ".github/workflows/ci.yml"]
+    paths-ignore: ["docs/**", "**.md"]
   pull_request:
-    paths: ["EasyGo.com/**", ".github/workflows/ci.yml"]
-
-defaults:
-  run:
-    working-directory: EasyGo.com
+    paths-ignore: ["docs/**", "**.md"]
 
 jobs:
   backend:
@@ -25,8 +21,8 @@ jobs:
       - name: Cache Composer packages
         uses: actions/cache@v4
         with:
-          path: EasyGo.com/vendor
-          key: composer-${{ hashFiles('EasyGo.com/composer.lock') }}
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
       - run: composer install --no-interaction --prefer-dist --no-progress
       - run: cp .env.example .env && php artisan key:generate
       - name: Code style (Laravel Pint)
@@ -45,6 +41,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: EasyGo.com/package-lock.json
+          cache-dependency-path: package-lock.json
       - run: npm ci
       - run: npm run build

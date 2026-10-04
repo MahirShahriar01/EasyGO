@@ -3,9 +3,15 @@
 All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+### Changed
+- Repository now contains only EasyGo: the application moved from `EasyGo.com/` to the repository root.
+### Removed
+- Old course lab projects (`API handaling AXIOs/`, `API laraval/`, `JSX Validation/`, `Mail Validation/`, `lab4task/`).
+
 ## [1.0.0] — 2026-10-04
 ### Added
-- **EasyGo.com application** replacing the empty `EasyGo.com` submodule pointer: Laravel 13 REST API + React 18 SPA (Redux Toolkit, Bootstrap 5, Vite).
+- **EasyGo application** replacing the empty `EasyGo.com` submodule pointer: Laravel 13 REST API + React 18 SPA (Redux Toolkit, Bootstrap 5, Vite).
 - Search, details and booking for **hotels (room types), flights, buses (interactive seat map), tour packages and rental cars**; destinations.
 - Booking engine: server-side quotes, coupons, VAT and service fee, transactional inventory locking, 30-minute holds, automatic expiry/completion, per-service refund policies.
 - Payments through a pluggable gateway interface with a sandbox gateway: card, bKash, Nagad, Rocket and pay-at-property.
